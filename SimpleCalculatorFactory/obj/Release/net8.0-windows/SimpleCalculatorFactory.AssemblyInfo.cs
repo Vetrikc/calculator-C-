@@ -11,12 +11,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("SimpleCalculator")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("SimpleCalculatorFactory")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ea2865bf1e51062d553c8e6f84a67953b2c59673")]
-[assembly: System.Reflection.AssemblyProductAttribute("SimpleCalculator")]
-[assembly: System.Reflection.AssemblyTitleAttribute("SimpleCalculator")]
+[assembly: System.Reflection.AssemblyProductAttribute("SimpleCalculatorFactory")]
+[assembly: System.Reflection.AssemblyTitleAttribute("SimpleCalculatorFactory")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 [assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
