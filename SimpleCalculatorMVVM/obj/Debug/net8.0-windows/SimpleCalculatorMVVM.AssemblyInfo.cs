@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SimpleCalculatorMVVM")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ebf1d6b6b303dce0cbed650367644cbed8fdb7a8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b4759ec2399faff281b60ce4836579b6f1e1b9f5")]
 [assembly: System.Reflection.AssemblyProductAttribute("SimpleCalculatorMVVM")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SimpleCalculatorMVVM")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
