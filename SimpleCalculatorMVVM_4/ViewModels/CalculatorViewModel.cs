@@ -1,22 +1,39 @@
 using System;
-using System.Diagnostics;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using SimpleCalculatorMVVM_4.Commands;
 using SimpleCalculatorMVVM_4.Models;
 
 namespace SimpleCalculatorMVVM_4.ViewModels
 {
+    /// <summary>
+    /// ViewModel калькулятора.
+    /// Собирает цепочку декораторов:
+    ///   CalculatorReceiver  (базовый компонент)
+    ///       ↑ ValidationDecorator   (конкретный декоратор №1 — валидация)
+    ///           ↑ LoggingDecorator  (конкретный декоратор №2 — логирование)
+    ///
+    /// ViewModel работает только через интерфейс ICalculatorReceiver,
+    /// что делает её независимой от конкретной реализации или набора декораторов.
+    /// </summary>
     public class CalculatorViewModel : ViewModelBase
     {
-        private readonly CalculatorReceiver _receiver;
+        // ── Паттерн Decorator: цепочка декораторов ──────────────────────────
+        private readonly ICalculatorReceiver _receiver;          // внешний конец цепочки
+        private readonly ValidationDecorator _validationLayer;   // ссылка для подписки на ошибки
+        private readonly LoggingDecorator _loggingLayer;      // ссылка для подписки на журнал
+
+        // ── Паттерн Command ─────────────────────────────────────────────────
         private readonly CommandInvoker _invoker;
-        
+
+        // ── Состояние ────────────────────────────────────────────────────────
         private string _display = "0";
         private string _exprDisplay = "";
         private double _firstOperand;
         private string _operator = "";
         private bool _newInput = true;
 
+        // ── Свойства дисплея ─────────────────────────────────────────────────
         public string Display
         {
             get => _display;
@@ -29,6 +46,10 @@ namespace SimpleCalculatorMVVM_4.ViewModels
             set => SetProperty(ref _exprDisplay, value);
         }
 
+        /// <summary>Журнал операций, отображаемый в ListBox через привязку данных.</summary>
+        public ObservableCollection<string> OperationLog { get; } = new();
+
+        // ── Команды ──────────────────────────────────────────────────────────
         public ICommand DigitCommand { get; }
         public ICommand OperatorCommand { get; }
         public ICommand EqualsCommand { get; }
@@ -41,11 +62,20 @@ namespace SimpleCalculatorMVVM_4.ViewModels
 
         public CalculatorViewModel()
         {
-            _receiver = new CalculatorReceiver();
             _invoker = new CommandInvoker();
-            
-            _receiver.ValueChanged += OnReceiverValueChanged;
 
+            // ── Сборка цепочки декораторов ──────────────────────────────────
+            var baseReceiver = new CalculatorReceiver();          // конкретный компонент
+            _validationLayer = new ValidationDecorator(baseReceiver);   // декоратор 1
+            _loggingLayer = new LoggingDecorator(_validationLayer);  // декоратор 2
+            _receiver = _loggingLayer;                     // работаем через интерфейс
+
+            // Подписки: ViewModel реагирует на события декораторов
+            _receiver.ValueChanged += OnReceiverValueChanged;
+            _validationLayer.ErrorOccurred += OnValidationError;
+            _loggingLayer.LogAdded += OnLogAdded;
+
+            // Инициализация команд
             DigitCommand = new RelayCommand(OnDigit);
             OperatorCommand = new RelayCommand(OnOperator);
             EqualsCommand = new RelayCommand(OnEquals);
@@ -57,72 +87,74 @@ namespace SimpleCalculatorMVVM_4.ViewModels
             RedoCommand = new RelayCommand(OnRedo, _ => _invoker.CanRedo());
         }
 
+        // ── Обработчики событий декораторов ─────────────────────────────────
+
         private void OnReceiverValueChanged(object? sender, double value)
         {
-            Display = value.ToString();
+            Display = FormatNumber(value);
+        }
+
+        private void OnValidationError(object? sender, string error)
+        {
+            Display = error;
+            ExprDisplay = "";
+            _operator = "";
+            _newInput = true;
+        }
+
+        private void OnLogAdded(object? sender, string entry)
+        {
+            // Добавляем в ObservableCollection — ListView обновится автоматически
+            OperationLog.Add(entry);
+
+            // Ограничиваем размер журнала (UI-удобство)
+            if (OperationLog.Count > 100)
+                OperationLog.RemoveAt(0);
+        }
+
+        // ── Вспомогательные методы ввода ─────────────────────────────────────
+
+        private static string FormatNumber(double v)
+        {
+            if (double.IsNaN(v) || double.IsInfinity(v)) return "Ошибка";
+            // До 10 значимых цифр без лишних нулей
+            return v.ToString("G10", System.Globalization.CultureInfo.InvariantCulture);
         }
 
         private void AppendDigit(string digit)
         {
-            if (_newInput)
-            {
-                Display = digit;
-                _newInput = false;
-            }
-            else
-            {
-                Display += digit;
-            }
+            if (_newInput) { Display = digit; _newInput = false; }
+            else { Display += digit; }
         }
 
         private void AppendDot()
         {
-            if (_newInput)
-            {
-                Display = "0.";
-                _newInput = false;
-                return;
-            }
-            
-            if (!Display.Contains('.'))
-                Display += '.';
+            if (_newInput) { Display = "0."; _newInput = false; return; }
+            if (!Display.Contains('.')) Display += '.';
         }
 
         private void SetOperator(string op)
         {
-            // Получаем текущее значение с дисплея
-            double currentValue = double.Parse(Display.Replace(',', '.'), System.Globalization.CultureInfo.InvariantCulture);
-            
-            // КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: устанавливаем значение в receiver
-            _receiver.SetValue(currentValue);
-            
-            _firstOperand = currentValue;
+            double current = ParseDisplay();
+            _receiver.SetValue(current);
+            _firstOperand = current;
             _operator = op;
             _newInput = true;
 
-            string opSymbol = op switch
-            {
-                "+" => "+",
-                "-" => "−",
-                "*" => "×",
-                "/" => "÷",
-                _ => op
-            };
-            ExprDisplay = $"{_firstOperand} {opSymbol}";
+            string sym = op switch { "+" => "+", "-" => "−", "*" => "×", "/" => "÷", _ => op };
+            ExprDisplay = $"{FormatNumber(_firstOperand)} {sym}";
         }
 
         private void CalculateAndExecuteCommand()
         {
-            double secondOperand = double.Parse(Display.Replace(',', '.'), System.Globalization.CultureInfo.InvariantCulture);
-            
-            var command = new CalculatorCommand(_receiver, _operator, secondOperand);
+            double second = ParseDisplay();
+            var command = new CalculatorCommand(_receiver, _operator, second);
             _invoker.ExecuteCommand(command);
-            
-            Display = _receiver.GetCurrentValue().ToString();
-            
+
+            Display = FormatNumber(_receiver.GetCurrentValue());
             _operator = "";
             _newInput = true;
-            
+
             (UndoCommand as RelayCommand)?.RaiseCanExecuteChanged();
             (RedoCommand as RelayCommand)?.RaiseCanExecuteChanged();
         }
@@ -130,8 +162,8 @@ namespace SimpleCalculatorMVVM_4.ViewModels
         private void DoEquals()
         {
             if (_operator == "") return;
-            
-            ExprDisplay = $"{_firstOperand} {_operator} {Display} =";
+            string sym = _operator switch { "+" => "+", "-" => "−", "*" => "×", "/" => "÷", _ => _operator };
+            ExprDisplay = $"{FormatNumber(_firstOperand)} {sym} {Display} =";
             CalculateAndExecuteCommand();
         }
 
@@ -147,56 +179,50 @@ namespace SimpleCalculatorMVVM_4.ViewModels
 
         private void Negate()
         {
-            if (double.TryParse(Display.Replace(',', '.'), System.Globalization.CultureInfo.InvariantCulture, out double val))
-            {
-                Display = (-val).ToString();
-                _receiver.SetValue(-val);
-            }
+            double val = ParseDisplay();
+            Display = FormatNumber(-val);
+            _receiver.SetValue(-val);
         }
 
         private void Percent()
         {
-            if (double.TryParse(Display.Replace(',', '.'), System.Globalization.CultureInfo.InvariantCulture, out double val))
-            {
-                Display = (val / 100).ToString();
-                _receiver.SetValue(val / 100);
-            }
+            double val = ParseDisplay();
+            Display = FormatNumber(val / 100);
+            _receiver.SetValue(val / 100);
         }
 
-        private void OnUndo(object? parameter)
+        private double ParseDisplay() =>
+            double.TryParse(Display.Replace(',', '.'),
+                System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture,
+                out double v) ? v : 0;
+
+        // ── Обработчики команд ────────────────────────────────────────────────
+
+        private void OnDigit(object? p) { if (p is string d) AppendDigit(d); }
+        private void OnOperator(object? p) { if (p is string op) SetOperator(op); }
+        private void OnEquals(object? p) => DoEquals();
+        private void OnDot(object? p) => AppendDot();
+        private void OnClear(object? p) => Clear();
+        private void OnNegate(object? p) => Negate();
+        private void OnPercent(object? p) => Percent();
+
+        private void OnUndo(object? p)
         {
             ExprDisplay = "";
             _invoker.Undo();
-            Display = _receiver.GetCurrentValue().ToString();
+            Display = FormatNumber(_receiver.GetCurrentValue());
             (UndoCommand as RelayCommand)?.RaiseCanExecuteChanged();
             (RedoCommand as RelayCommand)?.RaiseCanExecuteChanged();
         }
 
-        private void OnRedo(object? parameter)
+        private void OnRedo(object? p)
         {
             ExprDisplay = "";
             _invoker.Redo();
-            Display = _receiver.GetCurrentValue().ToString();
+            Display = FormatNumber(_receiver.GetCurrentValue());
             (UndoCommand as RelayCommand)?.RaiseCanExecuteChanged();
             (RedoCommand as RelayCommand)?.RaiseCanExecuteChanged();
         }
-
-        private void OnDigit(object? parameter)
-        {
-            if (parameter is string digit)
-                AppendDigit(digit);
-        }
-
-        private void OnOperator(object? parameter)
-        {
-            if (parameter is string op)
-                SetOperator(op);
-        }
-
-        private void OnEquals(object? parameter) => DoEquals();
-        private void OnDot(object? parameter) => AppendDot();
-        private void OnClear(object? parameter) => Clear();
-        private void OnNegate(object? parameter) => Negate();
-        private void OnPercent(object? parameter) => Percent();
     }
 }

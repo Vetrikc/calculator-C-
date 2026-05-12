@@ -2,7 +2,12 @@
 
 namespace SimpleCalculatorMVVM_4.Models
 {
-    public class CalculatorReceiver
+    /// <summary>
+    /// Конкретный компонент паттерна Decorator.
+    /// Содержит базовую логику вычислений без каких-либо дополнительных обязанностей.
+    /// Все расширения (валидация, логирование) добавляются декораторами снаружи.
+    /// </summary>
+    public class CalculatorReceiver : ICalculatorReceiver
     {
         private double _currentValue = 0;
 
@@ -16,9 +21,9 @@ namespace SimpleCalculatorMVVM_4.Models
             OnValueChanged(value);
         }
 
-        public void ExecuteOperation(string operator_symbol, double operand)
+        public void ExecuteOperation(string operatorSymbol, double operand)
         {
-            double result = operator_symbol switch
+            double result = operatorSymbol switch
             {
                 "+" => _currentValue + operand,
                 "-" => _currentValue - operand,
