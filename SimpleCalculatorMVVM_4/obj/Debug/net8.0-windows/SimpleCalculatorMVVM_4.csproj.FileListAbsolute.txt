@@ -1,7 +1,6 @@
 C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\obj\Debug\net8.0-windows\Views\MainWindow.g.cs
 C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\obj\Debug\net8.0-windows\App.g.cs
 C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\obj\Debug\net8.0-windows\SimpleCalculatorMVVM_4_MarkupCompile.cache
-C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\obj\Debug\net8.0-windows\SimpleCalculatorMVVM_4_MarkupCompile.lref
 C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\bin\Debug\net8.0-windows\SimpleCalculatorMVVM_4.exe
 C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\bin\Debug\net8.0-windows\SimpleCalculatorMVVM_4.deps.json
 C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\bin\Debug\net8.0-windows\SimpleCalculatorMVVM_4.runtimeconfig.json
