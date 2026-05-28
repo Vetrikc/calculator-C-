@@ -8,7 +8,18 @@ namespace SimpleCalculatorMVVM_4.Views
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new CalculatorViewModel();
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void About_Click(object sender, RoutedEventArgs e)
+        {
+            var aboutDialog = new AboutDialog();
+            aboutDialog.Owner = this;
+            aboutDialog.ShowDialog();
         }
     }
 }

@@ -5,5 +5,14 @@
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
 
+        <!-- Кастомный шрифт (положите ваш .ttf файл в Assets/Fonts/) -->
+        <!-- Вместо "YourFontName" укажите имя вашего шрифта (не имя файла, а имя внутри шрифта) -->
+        <FontFamily x:Key="CustomFont">/Assets/Fonts/#Londrina Solid_Cyr</FontFamily>
+
+        
+        <Style x:Key="SoundButtonStyle" TargetType="Button">
+            <Setter Property="Cursor" Value="{DynamicResource CustomCursor}"/>
+        </Style>
+
     </Application.Resources>
 </Application>

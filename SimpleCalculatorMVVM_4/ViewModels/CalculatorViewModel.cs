@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using SimpleCalculatorMVVM_4.Commands;
 using SimpleCalculatorMVVM_4.Models;
+using SimpleCalculatorMVVM_4.Services;
 
 namespace SimpleCalculatorMVVM_4.ViewModels
 {
@@ -18,6 +19,8 @@ namespace SimpleCalculatorMVVM_4.ViewModels
     /// </summary>
     public class CalculatorViewModel : ViewModelBase
     {
+        private readonly AudioService _audioService;
+
         // ── Паттерн Decorator: цепочка декораторов ──────────────────────────
         private readonly ICalculatorReceiver _receiver;          // внешний конец цепочки
         private readonly ValidationDecorator _validationLayer;   // ссылка для подписки на ошибки
@@ -62,6 +65,8 @@ namespace SimpleCalculatorMVVM_4.ViewModels
 
         public CalculatorViewModel()
         {
+            _audioService = new AudioService();
+
             _invoker = new CommandInvoker();
 
             // ── Сборка цепочки декораторов ──────────────────────────────────
@@ -96,6 +101,7 @@ namespace SimpleCalculatorMVVM_4.ViewModels
 
         private void OnValidationError(object? sender, string error)
         {
+            PlayErrorSound();
             Display = error;
             ExprDisplay = "";
             _operator = "";
@@ -199,16 +205,51 @@ namespace SimpleCalculatorMVVM_4.ViewModels
 
         // ── Обработчики команд ────────────────────────────────────────────────
 
-        private void OnDigit(object? p) { if (p is string d) AppendDigit(d); }
-        private void OnOperator(object? p) { if (p is string op) SetOperator(op); }
-        private void OnEquals(object? p) => DoEquals();
-        private void OnDot(object? p) => AppendDot();
-        private void OnClear(object? p) => Clear();
-        private void OnNegate(object? p) => Negate();
-        private void OnPercent(object? p) => Percent();
+        private void OnDigit(object? p)
+        {
+            PlayButtonSound(); 
+            if (p is string d) AppendDigit(d);
+        }
+
+        private void OnOperator(object? p)
+        {
+            PlayButtonSound(); 
+            if (p is string op) SetOperator(op);
+        }
+
+        private void OnEquals(object? p)
+        {
+            PlayOperationSound(); 
+            DoEquals();
+        }
+
+        private void OnDot(object? p)
+        {
+            PlayButtonSound();
+            AppendDot();
+        }
+
+        private void OnClear(object? p)
+        {
+            PlayButtonSound();
+            Clear();
+        }
+
+        private void OnNegate(object? p)
+        {
+            PlayButtonSound(); 
+            Negate();
+        }
+
+        private void OnPercent(object? p)
+        {
+            PlayButtonSound(); 
+            Percent();
+        }
 
         private void OnUndo(object? p)
         {
+            PlayButtonSound();
             ExprDisplay = "";
             _invoker.Undo();
             Display = FormatNumber(_receiver.GetCurrentValue());
@@ -218,11 +259,28 @@ namespace SimpleCalculatorMVVM_4.ViewModels
 
         private void OnRedo(object? p)
         {
+            PlayButtonSound(); 
             ExprDisplay = "";
             _invoker.Redo();
             Display = FormatNumber(_receiver.GetCurrentValue());
             (UndoCommand as RelayCommand)?.RaiseCanExecuteChanged();
             (RedoCommand as RelayCommand)?.RaiseCanExecuteChanged();
+        }
+
+
+        private void PlayButtonSound()
+        {
+            _audioService?.PlayButtonClick();
+        }
+
+        private void PlayOperationSound()
+        {
+            _audioService?.PlayOperation();
+        }
+
+        private void PlayErrorSound()
+        {
+            _audioService?.PlayError();
         }
     }
 }

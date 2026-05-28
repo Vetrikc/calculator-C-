@@ -18,3 +18,13 @@ C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\obj\Debu
 C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\obj\Debug\net8.0-windows\SimpleCalculatorMVVM_4.pdb
 C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\obj\Debug\net8.0-windows\SimpleCalculatorMVVM_4.genruntimeconfig.cache
 C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\obj\Debug\net8.0-windows\ref\SimpleCalculatorMVVM_4.dll
+C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\obj\Debug\net8.0-windows\SimpleCalculatorMVVM_4_MarkupCompile.lref
+C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\obj\Debug\net8.0-windows\App.baml
+C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\bin\Debug\net8.0-windows\Assets\Sounds\error.wav
+C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\bin\Debug\net8.0-windows\Assets\Cursors\calculator.cur
+C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\obj\Debug\net8.0-windows\SimpleCalculatorMVVM_4_Content.g.cs
+C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\bin\Debug\net8.0-windows\Assets\Sounds\button_click.wav
+C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\bin\Debug\net8.0-windows\Assets\Sounds\operation.wav
+C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\obj\Debug\net8.0-windows\Views\AboutDialog.baml
+C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\obj\Debug\net8.0-windows\Views\AboutDialog.g.cs
+C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs

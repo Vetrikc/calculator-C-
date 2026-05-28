@@ -3,159 +3,160 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:SimpleCalculatorMVVM_4.ViewModels"
         mc:Ignorable="d"
         Title="SimpleCalculatorMVVM — Decorator Pattern"
         Height="640" Width="300"
         ResizeMode="NoResize"
         Background="#0F0F0F"
-        FontFamily="Segoe UI"
+        FontFamily="{StaticResource CustomFont}"
         WindowStartupLocation="CenterScreen">
 
-    <Grid Margin="14">
-        <Grid.RowDefinitions>
-            <!-- Дисплей -->
-            <RowDefinition Height="90"/>
-            <!-- Кнопки -->
-            <RowDefinition Height="*"/>
-            <!-- Разделитель -->
-            <RowDefinition Height="Auto"/>
-            <!-- Журнал декоратора (Expander) -->
-            <RowDefinition Height="140"/>
-        </Grid.RowDefinitions>
+    <Window.DataContext>
+        <vm:CalculatorViewModel/>
+    </Window.DataContext>
 
-        <!-- ══════════════════════════════════════════════════════════════
-             Дисплей
-        ══════════════════════════════════════════════════════════════ -->
-        <Border Grid.Row="0" Background="#1A1A1A" CornerRadius="10" Padding="14,8">
-            <StackPanel VerticalAlignment="Center">
-                <TextBlock Text="{Binding ExprDisplay, Mode=OneWay}"
-                           FontSize="13" Foreground="#555"
-                           HorizontalAlignment="Right" Height="20"/>
-                <TextBlock Text="{Binding Display, Mode=OneWay}"
-                           FontSize="38" FontWeight="Light" Foreground="#F0F0F0"
-                           HorizontalAlignment="Right"
-                           TextTrimming="CharacterEllipsis"/>
-            </StackPanel>
-        </Border>
+    <DockPanel>
+        <!-- МЕНЮ -->
+        <Menu DockPanel.Dock="Top" Background="#1A1A1A" Foreground="White">
+            <MenuItem Header="Файл">
+                <MenuItem Header="Очистить" Command="{Binding ClearCommand}"/>
+                <MenuItem Header="Выход" Click="Exit_Click"/>
+            </MenuItem>
+            <MenuItem Header="Правка">
+                <MenuItem Header="Отменить" Command="{Binding UndoCommand}"/>
+                <MenuItem Header="Повторить" Command="{Binding RedoCommand}"/>
+            </MenuItem>
+            <MenuItem Header="Справка">
+                <MenuItem Header="О программе" Click="About_Click"/>
+            </MenuItem>
+        </Menu>
 
-        <!-- ══════════════════════════════════════════════════════════════
-             Сетка кнопок
-        ══════════════════════════════════════════════════════════════ -->
-        <Grid Grid.Row="1" Margin="0,10,0,0">
+        <!-- ОСНОВНОЙ КОНТЕНТ (бывший Grid) -->
+        <Grid Margin="14">
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="90"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="140"/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
 
-            <Grid.Resources>
-                <Style x:Key="Btn" TargetType="Button">
-                    <Setter Property="FontSize"       Value="17"/>
-                    <Setter Property="FontWeight"     Value="Normal"/>
-                    <Setter Property="Margin"         Value="5"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="Cursor"         Value="Hand"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="Button">
-                                <Border x:Name="Bd"
-                                        Background="{TemplateBinding Background}"
-                                        CornerRadius="50">
-                                    <ContentPresenter HorizontalAlignment="Center"
-                                                      VerticalAlignment="Center"/>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="Bd" Property="Opacity" Value="0.75"/>
-                                    </Trigger>
-                                    <Trigger Property="IsPressed" Value="True">
-                                        <Setter TargetName="Bd" Property="Opacity" Value="0.5"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </Grid.Resources>
+            <!-- Дисплей -->
+            <Border Grid.Row="0" Background="#1A1A1A" CornerRadius="10" Padding="14,8">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="{Binding ExprDisplay, Mode=OneWay}"
+                               FontSize="13" Foreground="#555"
+                               HorizontalAlignment="Right" Height="20"/>
+                    <TextBlock Text="{Binding Display, Mode=OneWay}"
+                               FontSize="38" FontWeight="Light" Foreground="#F0F0F0"
+                               HorizontalAlignment="Right"
+                               TextTrimming="CharacterEllipsis"/>
+                </StackPanel>
+            </Border>
 
-            <!-- Строка 0: C ± % ÷ -->
-            <Button Content="C"  Grid.Row="0" Grid.Column="0" Style="{StaticResource Btn}" Background="#333" Foreground="#00E5FF" Command="{Binding ClearCommand}"/>
-            <Button Content="±"  Grid.Row="0" Grid.Column="1" Style="{StaticResource Btn}" Background="#333" Foreground="#00E5FF" Command="{Binding NegateCommand}"/>
-            <Button Content="%"  Grid.Row="0" Grid.Column="2" Style="{StaticResource Btn}" Background="#333" Foreground="#00E5FF" Command="{Binding PercentCommand}"/>
-            <Button Content="÷"  Grid.Row="0" Grid.Column="3" Style="{StaticResource Btn}" Background="#FF6B35" Foreground="White" Command="{Binding OperatorCommand}" CommandParameter="/"/>
+            <!-- Сетка кнопок -->
+            <Grid Grid.Row="1" Margin="0,10,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-            <!-- Строка 1: 7 8 9 × -->
-            <Button Content="7"  Grid.Row="1" Grid.Column="0" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DigitCommand}" CommandParameter="7"/>
-            <Button Content="8"  Grid.Row="1" Grid.Column="1" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DigitCommand}" CommandParameter="8"/>
-            <Button Content="9"  Grid.Row="1" Grid.Column="2" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DigitCommand}" CommandParameter="9"/>
-            <Button Content="×"  Grid.Row="1" Grid.Column="3" Style="{StaticResource Btn}" Background="#FF6B35" Foreground="White" Command="{Binding OperatorCommand}" CommandParameter="*"/>
-
-            <!-- Строка 2: 4 5 6 − -->
-            <Button Content="4"  Grid.Row="2" Grid.Column="0" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DigitCommand}" CommandParameter="4"/>
-            <Button Content="5"  Grid.Row="2" Grid.Column="1" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DigitCommand}" CommandParameter="5"/>
-            <Button Content="6"  Grid.Row="2" Grid.Column="2" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DigitCommand}" CommandParameter="6"/>
-            <Button Content="−"  Grid.Row="2" Grid.Column="3" Style="{StaticResource Btn}" Background="#FF6B35" Foreground="White" Command="{Binding OperatorCommand}" CommandParameter="-"/>
-
-            <!-- Строка 3: 1 2 3 + -->
-            <Button Content="1"  Grid.Row="3" Grid.Column="0" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DigitCommand}" CommandParameter="1"/>
-            <Button Content="2"  Grid.Row="3" Grid.Column="1" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DigitCommand}" CommandParameter="2"/>
-            <Button Content="3"  Grid.Row="3" Grid.Column="2" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DigitCommand}" CommandParameter="3"/>
-            <Button Content="+"  Grid.Row="3" Grid.Column="3" Style="{StaticResource Btn}" Background="#FF6B35" Foreground="White" Command="{Binding OperatorCommand}" CommandParameter="+"/>
-
-            <!-- Строка 4: 0 . = -->
-            <Button Content="0"  Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
-                    Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0"
-                    Command="{Binding DigitCommand}" CommandParameter="0"/>
-            <Button Content="."  Grid.Row="4" Grid.Column="2" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DotCommand}"/>
-            <Button Content="="  Grid.Row="4" Grid.Column="3" Style="{StaticResource Btn}" Background="#00C853" Foreground="White" Command="{Binding EqualsCommand}"/>
-
-            <!-- Строка 5: ↩ ↪ -->
-            <Button Content="↩"  Grid.Row="5" Grid.Column="0" Style="{StaticResource Btn}" Background="#333" Foreground="#00E5FF" Command="{Binding UndoCommand}"/>
-            <Button Content="↪"  Grid.Row="5" Grid.Column="1" Style="{StaticResource Btn}" Background="#333" Foreground="#00E5FF" Command="{Binding RedoCommand}"/>
-        </Grid>
-
-        <!-- ══════════════════════════════════════════════════════════════
-             Разделитель с меткой паттерна
-        ══════════════════════════════════════════════════════════════ -->
-        <Border Grid.Row="2" Margin="0,6,0,4">
-            <StackPanel Orientation="Horizontal">
-                <Rectangle Height="1" Fill="#333" VerticalAlignment="Center" Width="60"/>
-                <TextBlock Text=" 🔎 Decorator Log " Foreground="#444" FontSize="11" VerticalAlignment="Center"/>
-                <Rectangle Height="1" Fill="#333" VerticalAlignment="Center" Width="60"/>
-            </StackPanel>
-        </Border>
-
-        <!-- ══════════════════════════════════════════════════════════════
-             Журнал декоратора LoggingDecorator
-             Показывает, что происходит внутри цепочки при каждом действии.
-        ══════════════════════════════════════════════════════════════ -->
-        <Border Grid.Row="3" Background="#111" CornerRadius="8" Padding="6">
-            <ListBox ItemsSource="{Binding OperationLog}"
-                     Background="Transparent"
-                     BorderThickness="0"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                     FontFamily="Consolas"
-                     FontSize="10"
-                     Foreground="#5FD"
-                     SelectionMode="Single">
-                <!-- Прокрутка всегда вниз: триггер на изменение коллекции -->
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="Padding" Value="2,1"/>
-                        <Setter Property="Background" Value="Transparent"/>
+                <Grid.Resources>
+                    <Style x:Key="Btn" TargetType="Button">
+                        <Setter Property="FontSize" Value="17"/>
+                        <Setter Property="FontWeight" Value="Normal"/>
+                        <Setter Property="Margin" Value="5"/>
                         <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="Bd"
+                                            Background="{TemplateBinding Background}"
+                                            CornerRadius="50">
+                                        <ContentPresenter HorizontalAlignment="Center"
+                                                          VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Bd" Property="Opacity" Value="0.75"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter TargetName="Bd" Property="Opacity" Value="0.5"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
                     </Style>
-                </ListBox.ItemContainerStyle>
-            </ListBox>
-        </Border>
-    </Grid>
+                </Grid.Resources>
+
+                <!-- Строка 0: C ± % ÷ -->
+                <Button Content="C"  Grid.Row="0" Grid.Column="0" Style="{StaticResource Btn}" Background="#333" Foreground="#00E5FF" Command="{Binding ClearCommand}"/>
+                <Button Content="±"  Grid.Row="0" Grid.Column="1" Style="{StaticResource Btn}" Background="#333" Foreground="#00E5FF" Command="{Binding NegateCommand}"/>
+                <Button Content="%"  Grid.Row="0" Grid.Column="2" Style="{StaticResource Btn}" Background="#333" Foreground="#00E5FF" Command="{Binding PercentCommand}"/>
+                <Button Content="÷"  Grid.Row="0" Grid.Column="3" Style="{StaticResource Btn}" Background="#FF6B35" Foreground="White" Command="{Binding OperatorCommand}" CommandParameter="/"/>
+
+                <!-- Строка 1: 7 8 9 × -->
+                <Button Content="7"  Grid.Row="1" Grid.Column="0" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DigitCommand}" CommandParameter="7"/>
+                <Button Content="8"  Grid.Row="1" Grid.Column="1" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DigitCommand}" CommandParameter="8"/>
+                <Button Content="9"  Grid.Row="1" Grid.Column="2" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DigitCommand}" CommandParameter="9"/>
+                <Button Content="×"  Grid.Row="1" Grid.Column="3" Style="{StaticResource Btn}" Background="#FF6B35" Foreground="White" Command="{Binding OperatorCommand}" CommandParameter="*"/>
+
+                <!-- Строка 2: 4 5 6 − -->
+                <Button Content="4"  Grid.Row="2" Grid.Column="0" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DigitCommand}" CommandParameter="4"/>
+                <Button Content="5"  Grid.Row="2" Grid.Column="1" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DigitCommand}" CommandParameter="5"/>
+                <Button Content="6"  Grid.Row="2" Grid.Column="2" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DigitCommand}" CommandParameter="6"/>
+                <Button Content="−"  Grid.Row="2" Grid.Column="3" Style="{StaticResource Btn}" Background="#FF6B35" Foreground="White" Command="{Binding OperatorCommand}" CommandParameter="-"/>
+
+                <!-- Строка 3: 1 2 3 + -->
+                <Button Content="1"  Grid.Row="3" Grid.Column="0" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DigitCommand}" CommandParameter="1"/>
+                <Button Content="2"  Grid.Row="3" Grid.Column="1" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DigitCommand}" CommandParameter="2"/>
+                <Button Content="3"  Grid.Row="3" Grid.Column="2" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DigitCommand}" CommandParameter="3"/>
+                <Button Content="+"  Grid.Row="3" Grid.Column="3" Style="{StaticResource Btn}" Background="#FF6B35" Foreground="White" Command="{Binding OperatorCommand}" CommandParameter="+"/>
+
+                <!-- Строка 4: 0 . = -->
+                <Button Content="0"  Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                        Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0"
+                        Command="{Binding DigitCommand}" CommandParameter="0"/>
+                <Button Content="."  Grid.Row="4" Grid.Column="2" Style="{StaticResource Btn}" Background="#222" Foreground="#F0F0F0" Command="{Binding DotCommand}"/>
+                <Button Content="="  Grid.Row="4" Grid.Column="3" Style="{StaticResource Btn}" Background="#00C853" Foreground="White" Command="{Binding EqualsCommand}"/>
+
+                <!-- Строка 5: ↩ ↪ -->
+                <Button Content="↩"  Grid.Row="5" Grid.Column="0" Style="{StaticResource Btn}" Background="#333" Foreground="#00E5FF" Command="{Binding UndoCommand}"/>
+                <Button Content="↪"  Grid.Row="5" Grid.Column="1" Style="{StaticResource Btn}" Background="#333" Foreground="#00E5FF" Command="{Binding RedoCommand}"/>
+            </Grid>
+
+            <!-- Разделитель -->
+            <Border Grid.Row="2" Margin="0,6,0,4">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Height="1" Fill="#333" VerticalAlignment="Center" Width="60"/>
+                    <TextBlock Text=" 🔎 Decorator Log " Foreground="#444" FontSize="11" VerticalAlignment="Center"/>
+                    <Rectangle Height="1" Fill="#333" VerticalAlignment="Center" Width="60"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Журнал -->
+            <Border Grid.Row="3" Background="#111" CornerRadius="8" Padding="6">
+                <ListBox ItemsSource="{Binding OperationLog}"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         FontFamily="Consolas"
+                         FontSize="10"
+                         Foreground="#5FD"
+                         SelectionMode="Single"/>
+            </Border>
+        </Grid>
+    </DockPanel>
 </Window>
