@@ -27,4 +27,4 @@ C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\bin\Debu
 C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\bin\Debug\net8.0-windows\Assets\Sounds\operation.wav
 C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\obj\Debug\net8.0-windows\Views\AboutDialog.baml
 C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\obj\Debug\net8.0-windows\Views\AboutDialog.g.cs
-C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
+C:\Users\vlad\source\repos\Vetrikc\calculator-C-\SimpleCalculatorMVVM_4\bin\Debug\net8.0-windows\appsettings.json

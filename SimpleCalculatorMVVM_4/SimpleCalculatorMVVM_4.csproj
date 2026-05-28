@@ -1,31 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	<OutputType>WinExe</OutputType>
-	<TargetFramework>net8.0-windows</TargetFramework>
-	<Nullable>enable</Nullable>
-	<ImplicitUsings>enable</ImplicitUsings>
-	<UseWPF>true</UseWPF>
-	<ApplicationIcon>Assets\Icons\calculator.ico</ApplicationIcon>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<ApplicationIcon>Assets\Icons\calculator.ico</ApplicationIcon>
+	</PropertyGroup>
 
-  
-  <ItemGroup>
-	<Content Include="Assets\Sounds\button_click.wav">
-	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</Content>
-	<Content Include="Assets\Sounds\operation.wav">
-	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</Content>
-	<Content Include="Assets\Sounds\error.wav">
-	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</Content>
-	<Resource Include="Assets\Icons\calculator.svg" />
-	<Content Include="Assets\Cursors\calculator.cur">
-	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</Content>
-	 <Resource Include="Assets\Fonts\*.ttf" />
-	 <Resource Include="Assets\Fonts\*.otf" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="Assets\Sounds\*.wav">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Assets\Cursors\*.cur">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Resource Include="Assets\Icons\calculator.svg" />
+		<Resource Include="Assets\Fonts\*.ttf" />
+		<Resource Include="Assets\Fonts\*.otf" />
+		<Content Include="appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
 </Project>

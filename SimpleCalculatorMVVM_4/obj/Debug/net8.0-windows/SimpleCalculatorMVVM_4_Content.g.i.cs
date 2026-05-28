@@ -9,8 +9,9 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/sounds/button_click.wav")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/sounds/operation.wav")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/sounds/error.wav")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/sounds/operation.wav")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/cursors/calculator.cur")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("appsettings.json")]
 
 

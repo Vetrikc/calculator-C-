@@ -19,6 +19,7 @@ namespace SimpleCalculatorMVVM_4.ViewModels
     /// </summary>
     public class CalculatorViewModel : ViewModelBase
     {
+        private readonly ConfigurationService _configService;
         private readonly AudioService _audioService;
 
         // ── Паттерн Decorator: цепочка декораторов ──────────────────────────
@@ -62,10 +63,15 @@ namespace SimpleCalculatorMVVM_4.ViewModels
         public ICommand PercentCommand { get; }
         public ICommand UndoCommand { get; }
         public ICommand RedoCommand { get; }
-
-        public CalculatorViewModel()
+        public CalculatorViewModel() : this(new ConfigurationService())
+        { 
+        }
+        public CalculatorViewModel(ConfigurationService configService)
         {
+            _configService = configService;
             _audioService = new AudioService();
+
+            _configService.ConfigChanged += OnConfigChanged;
 
             _invoker = new CommandInvoker();
 
@@ -270,7 +276,10 @@ namespace SimpleCalculatorMVVM_4.ViewModels
 
         private void PlayButtonSound()
         {
-            _audioService?.PlayButtonClick();
+            if (_configService.Config.SoundEnabled)
+            {
+                _audioService?.PlayButtonClick();
+            }
         }
 
         private void PlayOperationSound()
@@ -281,6 +290,12 @@ namespace SimpleCalculatorMVVM_4.ViewModels
         private void PlayErrorSound()
         {
             _audioService?.PlayError();
+        }
+
+        private void OnConfigChanged(object? sender, AppConfig config)
+        {
+            // Обновляем состояние звука
+            // Применяем другие настройки при необходимости
         }
     }
 }

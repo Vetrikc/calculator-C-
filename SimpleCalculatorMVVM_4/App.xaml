@@ -1,17 +1,46 @@
 <Application x:Class="SimpleCalculatorMVVM_4.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:SimpleCalculatorMVVM_4"
-             StartupUri="Views/MainWindow.xaml">
+            >
     <Application.Resources>
 
-        <!-- Кастомный шрифт (положите ваш .ttf файл в Assets/Fonts/) -->
-        <!-- Вместо "YourFontName" укажите имя вашего шрифта (не имя файла, а имя внутри шрифта) -->
+        <!-- Кастомный шрифт -->
         <FontFamily x:Key="CustomFont">/Assets/Fonts/#Londrina Solid_Cyr</FontFamily>
 
-        
-        <Style x:Key="SoundButtonStyle" TargetType="Button">
-            <Setter Property="Cursor" Value="{DynamicResource CustomCursor}"/>
+        <!-- Цветовые ресурсы -->
+        <SolidColorBrush x:Key="BackgroundColor" Color="#0F0F0F"/>
+        <SolidColorBrush x:Key="ButtonColor" Color="#222222"/>
+        <SolidColorBrush x:Key="ButtonSpecialColor" Color="#FF6B35"/>
+        <SolidColorBrush x:Key="ButtonEqualColor" Color="#00C853"/>
+        <SolidColorBrush x:Key="TextColor" Color="#F0F0F0"/>
+        <SolidColorBrush x:Key="DisplayBackground" Color="#1A1A1A"/>
+
+        <!-- Размер шрифта -->
+        <system:Double x:Key="FontSize">14</system:Double>
+
+        <!-- СТИЛЬ ДЛЯ МЕНЮ -->
+        <Style TargetType="Menu">
+            <Setter Property="Background" Value="{DynamicResource MenuBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource MenuForeground}"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+
+        <!-- СТИЛЬ ДЛЯ ПУНКТОВ МЕНЮ -->
+        <Style TargetType="MenuItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource MenuForeground}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource MenuItemHoverBackground}"/>
+                </Trigger>
+                <Trigger Property="IsHighlighted" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource MenuItemHoverBackground}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource MenuForeground}"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
     </Application.Resources>
